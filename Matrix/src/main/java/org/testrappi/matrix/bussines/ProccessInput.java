@@ -57,6 +57,7 @@ public class ProccessInput {
         int n = 0; //indica tamaño de las dimensiones del array
         int m = 0; //indica numero de operaciones de un caso
         int t = 0; //indica cantidad de casos
+        RappiMatrix rappi = null;
         while ((nline = reader.readNext()) != null) {
             if (nline.length == 1 && caseln == 0) { //indica cuantos casos existen
                 t = Integer.parseInt(nline[0]);
@@ -64,20 +65,10 @@ public class ProccessInput {
                 caseln++;
                 n = Integer.parseInt(nline[0]);
                 m = Integer.parseInt(nline[1]);
-                if(n<=100 && m <=1000){
-                    RappiMatrix rappi = new RappiMatrix(n,m);
-                    
-                }else{
-                    throw new Throwable("La cantidad de operaciones de un caso no puede pasar los 1000, ni la cantidad de dimensiones 100");
-                }                
+                rappi = new RappiMatrix(n,m);
+                rappi.instruction(nline);
             } else if (nline.length > 2) { //indica la operacion.
-                if(nline[0].equals("UPDATE")){
-                    
-                }else if(nline[0].equals("QUERY")){
-                    
-                }else {
-                    throw new Throwable("La operacion "+nline[0]+" no es permitida ");
-                }
+                rappi.instruction(nline);
             } else {
                 throw new Throwable("El formato del archivo no cumple con lo requerimientos");
             }            
@@ -87,16 +78,6 @@ public class ProccessInput {
 
     }
     
-    private boolean isValidUpdate(String[] lineVals){
-        if(lineVals.length>5 ){
-            return false;
-        }else{
-            for(String val : lineVals){
-                int position = Integer.parseInt(val);
-            }
-        }
-        
-    }
 
     public void close() throws IOException {
         this.file.close();
