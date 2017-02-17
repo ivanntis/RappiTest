@@ -24,12 +24,15 @@ public class mainMatrix {
     public static void main(String[] args) {
         ProccessInput pi = null;
         try {            
-            pi = new ProccessInput("C:/Users/Usuario/Documents/inputTest.csv");
+            pi = new ProccessInput("/Users/ivanps/Documents/RappiTest/Matrix/TEST1.csv");
+            pi.getBuildCases();
            // pi.getRowsInput();
-            RappiMatrix rm = new RappiMatrix(2,2);
+           // RappiMatrix rm = new RappiMatrix(2,2);
         } catch (FileNotFoundException ex) {
             System.err.println(ex);
         } catch (IOException ex) {
+            Logger.getLogger(mainMatrix.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable ex) {
             Logger.getLogger(mainMatrix.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

@@ -29,7 +29,7 @@ public class ProccessInput {
         this.mapCases = new HashMap<>();
         this.file = new FileReader(path);
         this.reader = new CSVReader(this.file, ' ');
-        this.csvList = getRowsInput();
+        //this.csvList = getRowsInput();
 
     }
 
@@ -66,7 +66,6 @@ public class ProccessInput {
                 n = Integer.parseInt(nline[0]);
                 m = Integer.parseInt(nline[1]);
                 rappi = new RappiMatrix(n,m);
-                rappi.instruction(nline);
             } else if (nline.length > 2) { //indica la operacion.
                 rappi.instruction(nline);
             } else {

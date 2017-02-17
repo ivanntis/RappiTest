@@ -8,6 +8,7 @@ package org.testrappi.matrix.bussines;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.testrappi.matrix.dto.Coordinate;
 
 /**
  *
@@ -19,37 +20,61 @@ public class RappiMatrix {
     private List<Integer> resultList;
     private int maxInstructions;
     private int dimension;
+    private final String UPD = "UPDATE";
+    private final String QRY = "QUERY";
 
     public RappiMatrix(int dimension, int maxInstructions) throws Throwable {
         setDimension(dimension);
         setMaxInstructions(maxInstructions);
-        this.maxInstructions = maxInstructions;
         this.matrix = new int[dimension][dimension][dimension];
         //fillMatrix( this.matrix,dimension-1,dimension-1,dimension,2); //esta linea no es necesaria en java
-        System.out.println(Arrays.deepToString(this.matrix)); //Borrar        
+
         this.resultList = new ArrayList<>();
+
     }
 
     public void instruction(String[] fullLine) throws Throwable {
-        if (fullLine[0].equals("UPDATE") && isValidUpdate(fullLine)) {
-            update(1, 1, 1, 4);
+        List<Integer> coordinates = new ArrayList<>();
+        if (isValidCoordinates(fullLine, coordinates)) {
+            if (fullLine[0].equals(UPD)) {
+                int value = Integer.parseInt(fullLine[4]);
+                Coordinate cordinate = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                update(cordinate, value);
 
-        } else if (fullLine[0].equals("QUERY")) {
-            query(1, 1, 1, 2, 2, 2);
+            } else if (fullLine[0].equals(QRY)) {
+                Coordinate coordinateIni = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                Coordinate coordinateFin = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
+                query(coordinateIni,coordinateFin,coordinateFin);
 
+            } else {
+                throw new Throwable("La operacion " + fullLine[0] + " no es permitida ");
+            }
         } else {
             throw new Throwable("La operacion " + fullLine[0] + " no es permitida ");
         }
 
     }
 
-    private void update(int x, int y, int z, int value) {
-        this.matrix[x][y][z] = value;
+    //private void update(int x, int y, int z, int value) {
+    private void update(Coordinate c, int value) {
+        this.matrix[c.getX()][c.getY()][c.getZ()] = value;
         resultList.add(value);
+        //System.out.println(value);
     }
 
-    private void query(int x1, int y1, int z1, int x2, int y2, int z2) {
-        resultList.add(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
+    //private int query(int x1, int y1, int z1, int x2, int y2, int z2) {
+    private int query(Coordinate cIni,Coordinate cFin,Coordinate cAct) {
+        //resultList.add(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
+        //System.out.println(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
+        if (cIni.getZ()> cAct.getZ()) {
+           return   this.matrix[cFin.getX()][cFin.getY()][cFin.getZ()]+query(cIni,cFin,cAct) ;
+        } /*else if (y1 > y2) {
+            return   this.matrix[x2][y2][z2]+query(x1,y1,z1,x1,y1,z1-1) ; 
+        }else if (x1 > x2) {
+
+        }*/
+
+        return 0;
     }
 
     @Override
@@ -68,20 +93,23 @@ public class RappiMatrix {
             fillMatrix(matrixInit, x - 1, matrix[0].length - 1, matrix[0][0].length, valueFill);
         }
     }
-    
 
-    private boolean isValidUpdate(String[] lineVals) {
-        if (lineVals.length == 5) {
-            for (int i = 1; i < lineVals.length; i++) {
-                int arrayPosition= Integer.parseInt(lineVals[i]);
-                if(arrayPosition <0 || arrayPosition>getDimension()){
-                    return false;
-                }
-            }
-            return true;
-        } else {
+    private boolean isValidCoordinates(String[] lineVals, List<Integer> coordinates) {
+        int sizeLine = lineVals.length;
+
+        if (sizeLine == 5) {
+            sizeLine = lineVals.length - 1;
+        } else if (sizeLine != 7) {
             return false;
         }
+        for (int i = 1; i < sizeLine; i++) {
+            int arrayPosition = i - 1;
+            coordinates.add(Integer.parseInt(lineVals[i]));
+            if (coordinates.get(arrayPosition) < 0 || coordinates.get(arrayPosition) > getDimension()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int getMaxInstructions() {
@@ -89,9 +117,9 @@ public class RappiMatrix {
     }
 
     public void setMaxInstructions(int maxInstructions) throws Throwable {
-        if (maxInstructions >=1 && maxInstructions <= 1000)
+        if (maxInstructions >= 1 && maxInstructions <= 1000) {
             this.maxInstructions = maxInstructions;
-        else {
+        } else {
             throw new Throwable("La dimencion 'N' de la matrix debe ser 1<=M<=100");
         }
         this.maxInstructions = maxInstructions;
@@ -102,13 +130,11 @@ public class RappiMatrix {
     }
 
     public void setDimension(int dimension) throws Throwable {
-        if (dimension >=1 && dimension <= 100)
+        if (dimension >= 1 && dimension <= 100) {
             this.dimension = dimension;
-        else {
+        } else {
             throw new Throwable("La dimencion 'N' de la matrix debe ser 1<=N<=100");
         }
     }
-    
-    
 
 }
