@@ -43,8 +43,10 @@ public class RappiMatrix {
 
             } else if (fullLine[0].equals(QRY)) {
                 Coordinate coordinateIni = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
-                Coordinate coordinateFin = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
-                query(coordinateIni,coordinateFin,coordinateFin);
+                Coordinate coordinateFIn = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
+                Coordinate coordinateAct = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
+                int res = query(coordinateIni, coordinateFIn, coordinateAct);
+                System.out.println(res);
 
             } else {
                 throw new Throwable("La operacion " + fullLine[0] + " no es permitida ");
@@ -63,18 +65,29 @@ public class RappiMatrix {
     }
 
     //private int query(int x1, int y1, int z1, int x2, int y2, int z2) {
-    private int query(Coordinate cIni,Coordinate cFin,Coordinate cAct) {
+    private int query(Coordinate cIni, Coordinate cFin, Coordinate cAct) {
         //resultList.add(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
         //System.out.println(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
-        if (cIni.getZ()> cAct.getZ()) {
-           return   this.matrix[cFin.getX()][cFin.getY()][cFin.getZ()]+query(cIni,cFin,cAct) ;
-        } /*else if (y1 > y2) {
-            return   this.matrix[x2][y2][z2]+query(x1,y1,z1,x1,y1,z1-1) ; 
-        }else if (x1 > x2) {
+        int total = 0;
+        if (cIni.getZ() <= cAct.getZ()) {
+            int posZ = cAct.getZ();
+            cAct.setZ(cAct.getZ() - 1);
+            total = this.matrix[cAct.getX()][cAct.getY()][posZ] + query(cIni, cFin, cAct);
+        } else if (cIni.getY() < cAct.getY()) {
+            cAct.setZ(cFin.getZ());
+            cAct.setY(cAct.getY() - 1);
+            total = query(cIni, cFin, cAct);
+            //total =   this.matrix[cFin.getX()][cFin.getY()][cFin.getZ()]+query(cIni,cFin,cAct) ;
+        } else if (cIni.getX() < cAct.getX()) {
+            cAct.setZ(cFin.getZ());
+            cAct.setY(cFin.getY());
+            cAct.setX(cAct.getX() - 1);
+            //total =    this.matrix[cFin.getX()][cFin.getY()][cFin.getZ()]+query(cIni,cFin,cAct) ;
+            total = query(cIni, cFin, cAct);
 
-        }*/
+        }
+        return total;
 
-        return 0;
     }
 
     @Override
@@ -104,7 +117,7 @@ public class RappiMatrix {
         }
         for (int i = 1; i < sizeLine; i++) {
             int arrayPosition = i - 1;
-            coordinates.add(Integer.parseInt(lineVals[i]));
+            coordinates.add(Integer.parseInt(lineVals[i]) - 1);
             if (coordinates.get(arrayPosition) < 0 || coordinates.get(arrayPosition) > getDimension()) {
                 return false;
             }
