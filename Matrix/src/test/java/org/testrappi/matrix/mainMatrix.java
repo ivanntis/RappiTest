@@ -33,7 +33,7 @@ public class mainMatrix {
         } catch (IOException ex) {
             Logger.getLogger(mainMatrix.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {
-            Logger.getLogger(mainMatrix.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex.getMessage());
         } finally {
             try {
                 pi.close();

@@ -71,7 +71,10 @@ public class ProccessInput {
             } else {
                 throw new Throwable("El formato del archivo no cumple con lo requerimientos");
             }            
-                 
+            
+            if(caseln>t){
+                throw new Throwable("Se omiten los demas casos por que exeden las "+t+" Solicitadas");
+            }
 
         }
 
