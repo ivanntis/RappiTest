@@ -1,20 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.testrappi.matrix;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.testrappi.matrix.bussines.ProccessInput;
-import org.testrappi.matrix.bussines.RappiMatrix;
+import org.testrappi.matrix.business.ProccessInput;
 
 /**
  *
- * @author Usuario
+ * @author Ivan Ricardo Peña
  */
 public class mainMatrix {
 
@@ -24,14 +17,14 @@ public class mainMatrix {
     public static void main(String[] args) {
         ProccessInput pi = null;
         try {            
-            pi = new ProccessInput("/Users/ivanps/Documents/RappiTest/Matrix/TEST1.csv");
+            
+            pi = new ProccessInput("./TEST1.csv");
             pi.getBuildCases();
-           // pi.getRowsInput();
-           // RappiMatrix rm = new RappiMatrix(2,2);
+           
         } catch (FileNotFoundException ex) {
             System.err.println(ex);
         } catch (IOException ex) {
-            Logger.getLogger(mainMatrix.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         } catch (Throwable ex) {
             System.err.println(ex.getMessage());
         } finally {

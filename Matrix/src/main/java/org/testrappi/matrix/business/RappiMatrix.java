@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.testrappi.matrix.bussines;
+
+package org.testrappi.matrix.business;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +8,7 @@ import org.testrappi.matrix.dto.Coordinate;
 
 /**
  *
- * @author Usuario
+ * @author Ivan Ricardo Peña
  */
 public class RappiMatrix {
 
@@ -36,20 +32,21 @@ public class RappiMatrix {
     public void instruction(String[] fullLine) throws Throwable {
         List<Integer> coordinates = new ArrayList<>();
         if (isValidCoordinates(fullLine, coordinates)) {
-            if (fullLine[0].equals(UPD)) {
-                int value = Integer.parseInt(fullLine[4]);
-                Coordinate cordinate = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
-                update(cordinate, value);
-
-            } else if (fullLine[0].equals(QRY)) {
-                Coordinate coordinateIni = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
-                Coordinate coordinateFIn = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
-                Coordinate coordinateAct = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
-                int res = query(coordinateIni, coordinateFIn, coordinateAct);
-                System.out.println(res);
-
-            } else {
-                throw new Throwable("La operacion " + fullLine[0] + " no es permitida ");
+            switch (fullLine[0]) {
+                case UPD:
+                    int value = Integer.parseInt(fullLine[4]);
+                    Coordinate cordinate = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                    update(cordinate, value);
+                    break;
+                case QRY:
+                    Coordinate coordinateIni = new Coordinate(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                    Coordinate coordinateFIn = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
+                    Coordinate coordinateAct = new Coordinate(coordinates.get(3), coordinates.get(4), coordinates.get(5));
+                    int res = query(coordinateIni, coordinateFIn, coordinateAct);
+                    System.out.println(res);
+                    break;
+                default:
+                    throw new Throwable("La operacion " + fullLine[0] + " no es permitida ");
             }
         } else {
             throw new Throwable("La operacion " + fullLine[0] + " no es permitida ");
@@ -57,17 +54,12 @@ public class RappiMatrix {
 
     }
 
-    //private void update(int x, int y, int z, int value) {
     private void update(Coordinate c, int value) {
         this.matrix[c.getX()][c.getY()][c.getZ()] = value;
         resultList.add(value);
-        //System.out.println(value);
     }
 
-    //private int query(int x1, int y1, int z1, int x2, int y2, int z2) {
     private int query(Coordinate cIni, Coordinate cFin, Coordinate cAct) {
-        //resultList.add(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
-        //System.out.println(this.matrix[x1][y1][z1] + this.matrix[x2][y2][z2]);
         int total = 0;
         if (cIni.getZ() <= cAct.getZ()) {
             int posZ = cAct.getZ();
@@ -77,12 +69,10 @@ public class RappiMatrix {
             cAct.setZ(cFin.getZ());
             cAct.setY(cAct.getY() - 1);
             total = query(cIni, cFin, cAct);
-            //total =   this.matrix[cFin.getX()][cFin.getY()][cFin.getZ()]+query(cIni,cFin,cAct) ;
         } else if (cIni.getX() < cAct.getX()) {
             cAct.setZ(cFin.getZ());
             cAct.setY(cFin.getY());
             cAct.setX(cAct.getX() - 1);
-            //total =    this.matrix[cFin.getX()][cFin.getY()][cFin.getZ()]+query(cIni,cFin,cAct) ;
             total = query(cIni, cFin, cAct);
 
         }
@@ -133,7 +123,7 @@ public class RappiMatrix {
         if (maxInstructions >= 1 && maxInstructions <= 1000) {
             this.maxInstructions = maxInstructions;
         } else {
-            throw new Throwable("La dimencion 'N' de la matrix debe ser 1<=M<=100");
+            throw new Throwable("La dimencion 'M' de la matrix debe ser 1<=M<=1000");
         }
         this.maxInstructions = maxInstructions;
     }
